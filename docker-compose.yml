@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    container_name: quickonboard-db
+    environment:
+      POSTGRES_DB: quickonboard
+      POSTGRES_USER: onboard
+      POSTGRES_PASSWORD: secret123
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    container_name: quickonboard-redis
+    ports:
+      - "6379:6379"
+
+  ollama:
+    image: ollama/ollama
+    container_name: quickonboard-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    # Automatically pulls gemma:2b at container runtime
+    entrypoint: >
+      sh -c "ollama serve & sleep 3 && ollama pull gemma:2b && tail -f /dev/null"
+
+  api-service:
+    build: .
+    container_name: quickonboard-api
+    ports:
+      - "80:80"
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: quickonboard
+      DB_USER: onboard
+      DB_PASS: secret123
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      OLLAMA_HOST: ollama
+      OLLAMA_PORT: 11434
+    depends_on:
+      - db
+      - redis
+      - ollama
+
+volumes:
+  db-data:
+  ollama-data:
