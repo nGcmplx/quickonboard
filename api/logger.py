@@ -6,6 +6,7 @@ DB_URL = f"postgresql://{os.environ['DB_USER']}:{os.environ['DB_PASS']}@{os.envi
 engine = create_engine(DB_URL, future=True)
 SessionLocal = sessionmaker(bind=engine)
 
+
 def init_db():
     with engine.connect() as conn:
         conn.execute(text("""
@@ -21,6 +22,7 @@ def init_db():
         conn.commit()
         print("Successfuly started database connection.")
 
+
 def insert_log(session_id, prompt, response, source="mock"):
     db = SessionLocal()
     db.execute(
@@ -32,6 +34,7 @@ def insert_log(session_id, prompt, response, source="mock"):
     )
     db.commit()
     db.close()
+
 
 def get_logs(limit):
     db = SessionLocal()

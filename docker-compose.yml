@@ -21,18 +21,22 @@ services:
       - "6379:6379"
 
   ollama:
-    image: ollama/ollama
+    build: ./ollama
     container_name: quickonboard-ollama
     ports:
       - "11434:11434"
     volumes:
       - ollama-data:/root/.ollama
-    entrypoint: >
-      sh -c "ollama serve & sleep 5 && ollama pull gemma:2b && tail -f /dev/null"
+
+
 
   api-service:
     build: .
     container_name: quickonboard-api
+    depends_on:
+      - db
+      - redis
+      - ollama
     ports:
       - "80:80"
     environment:
@@ -45,9 +49,16 @@ services:
       REDIS_PORT: 6379
       OLLAMA_HOST: ollama
       OLLAMA_PORT: 11434
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
     volumes:
-      - ./chroma_db:/code/chroma_db
+      - chroma-data:/code/chroma_db
 
 volumes:
   db-data:
   ollama-data:
+  chroma-data:

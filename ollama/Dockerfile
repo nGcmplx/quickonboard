@@ -1,4 +1,6 @@
 FROM ollama/ollama
 
-# Automatically pull the lightweight model
-RUN ollama pull gemma:2b
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT ["/entrypoint.sh"]
