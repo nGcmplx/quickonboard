@@ -11,7 +11,10 @@ client = chromadb.Client(
 
 embedding_func = SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
 
-collection = client.create_collection(name="hr_docs", embedding_function=embedding_func)
+try:
+    collection = client.get_collection(name="hr_docs")
+except:
+    collection = client.create_collection(name="hr_docs", embedding_function=embedding_func)
 
 with open(CHUNKS_PATH, "r", encoding="utf-8") as f:
     chunks = json.load(f)

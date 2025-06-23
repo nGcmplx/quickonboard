@@ -19,6 +19,7 @@ def init_db():
             )
         """))
         conn.commit()
+        print("Successfuly started database connection.")
 
 def insert_log(session_id, prompt, response, source="mock"):
     db = SessionLocal()
