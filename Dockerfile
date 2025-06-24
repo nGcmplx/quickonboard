@@ -10,5 +10,4 @@ RUN pip install --no-cache-dir torch==2.1.2+cpu --index-url https://download.pyt
 
 COPY . /code/
 
-# ✅ Only start the API
 CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "80"]

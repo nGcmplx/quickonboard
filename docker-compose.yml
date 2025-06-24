@@ -28,8 +28,6 @@ services:
     volumes:
       - ollama-data:/root/.ollama
 
-
-
   api-service:
     build: .
     container_name: quickonboard-api
@@ -50,7 +48,7 @@ services:
       OLLAMA_HOST: ollama
       OLLAMA_PORT: 11434
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      test: [ "CMD", "curl", "-f", "http://localhost/health" ]
       interval: 10s
       timeout: 5s
       retries: 10
