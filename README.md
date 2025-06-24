@@ -99,3 +99,47 @@ Returns conversation history.
 Returns `{ "status": "ok" }` if app is ready (used for Docker healthcheck).
 
 ---
+
+## Run Locally
+
+### Prerequisites
+
+* [Docker](https://docs.docker.com/get-docker/)
+* [Docker Compose](https://docs.docker.com/compose/install/)
+
+### 1. Clone the Repo
+
+```bash
+git clone https://github.com/nGcmplx/quickonboard.git
+cd quickonboard
+```
+
+### 2. Start All Services
+
+```bash
+docker-compose up --build
+```
+
+This spins up:
+
+* `api-service`: FastAPI backend on [http://localhost:80](http://localhost:80)
+* `ollama`: local LLM server (`phi:2.7b`)
+* `redis`: for session memory
+* `postgres`: for logging
+* `chroma`: for vector search (HR docs)
+
+### 3. Test the API
+
+You can send a test chat using `curl` or Postman:
+
+```bash
+curl -X POST http://localhost/chat \
+  -H "Content-Type: application/json" \
+  -d '{
+        "session_id": "demo",
+        "prompt": "What’s my first week like?",
+        "log": true
+      }'
+```
+
+You should get a hybrid LLM + FAQ response if everything is wired correctly.
