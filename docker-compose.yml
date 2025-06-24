@@ -49,9 +49,9 @@ services:
       OLLAMA_PORT: 11434
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost/health" ]
-      interval: 10s
+      interval: 60s
       timeout: 5s
-      retries: 10
+      retries: 3
 
     volumes:
       - chroma-data:/code/chroma_db

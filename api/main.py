@@ -15,11 +15,12 @@ async def lifespan(app: FastAPI):
     print("Initializing database...")
     init_db()
 
-    print("Initializing Chroma...")
     initialize_chroma()
 
-    print("Warming up Ollama...")
-    warm_up_ollama()
+    try:
+        warm_up_ollama()
+    except Exception as e:
+        print("Ollama warm-up failed:", str(e))
 
     yield
 
@@ -49,7 +50,8 @@ def chat(req: ChatRequest):
 
     # Memory + Logs
     append_to_session(session_id, prompt, response)
-    insert_log(session_id, prompt if req.log else "REDACTED", response if req.log else "REDACTED")
+    insert_log(session_id, prompt if req.log else "REDACTED", response if req.log else "REDACTED",
+               source=source if req.log else "REDACTED")
 
     return {
         "session_id": session_id,

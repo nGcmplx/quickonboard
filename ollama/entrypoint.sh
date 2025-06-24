@@ -6,11 +6,15 @@ ollama serve &
 # Capture PID
 SERVER_PID=$!
 
-# Wait a bit for server to start
-sleep 5
+# Wait for Ollama to be ready
+echo "Waiting for Ollama on port 11434..."
+until curl -s http://localhost:11434 > /dev/null; do
+  sleep 1
+done
 
-# Pull the model
-ollama pull gemma:2b
+# Now pull the model
+echo "Pulling model..."
+ollama pull phi:2.7b
 
-# Wait for the server process (keep container alive)
+# Wait for server to stay alive
 wait "$SERVER_PID"

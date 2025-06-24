@@ -5,7 +5,7 @@ CHROMA_DIR = "/code/chroma_db"
 THRESHOLD_HIGH = 0.75
 THRESHOLD_LOW = 0.4
 
-embedding_func = SentenceTransformerEmbeddingFunction(model_name="all-MiniLM-L6-v2")
+embedding_func = SentenceTransformerEmbeddingFunction(model_name="paraphrase-MiniLM-L3-v2")
 client = chromadb.Client(chromadb.config.Settings(persist_directory=CHROMA_DIR))
 collection = None  # Lazy-loaded global collection
 

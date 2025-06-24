@@ -9,9 +9,9 @@ client = Client(host=f"http://{OLLAMA_HOST}:{OLLAMA_PORT}")
 
 def ask_ollama(messages: List[Dict[str, str]]) -> str:
     response = client.chat(
-        model="gemma:2b",
+        model="phi:2.7b",
         messages=messages,
-        options={"num_predict": 128}
+        options={"num_predict": 64, "temperature": 0.7}
     )
     return response["message"]["content"]
 
@@ -19,7 +19,7 @@ def ask_ollama(messages: List[Dict[str, str]]) -> str:
 def warm_up_ollama():
     try:
         print("Warming up Ollama model...")
-        _ = client.generate(model="gemma:2b", prompt="hello")
+        _ = client.generate(model="phi:2.7b", prompt="hello")
         print("Ollama model is ready.")
     except Exception as e:
         print("Failed to warm up Ollama:", str(e))

@@ -1,3 +1,4 @@
+import gzip
 import os
 import json
 import re
@@ -53,22 +54,23 @@ def initialize_chroma():
     print("Initializing Chroma...")
     client = chromadb.Client(chromadb.config.Settings(persist_directory=CHROMA_DIR))
 
-    # Skip if already exists
-    existing = {c.name for c in client.list_collections()}
-    if "hr_docs" in existing:
+    if "hr_docs" in {c.name for c in client.list_collections()}:
         print("Chroma already initialized.")
         return
 
-    # Load from cache or markdown
-    if os.path.exists(CHUNKS_PATH):
-        print("Loading chunks from JSON...")
-        with open(CHUNKS_PATH, "r", encoding="utf-8") as f:
+    gz_path = CHUNKS_PATH + ".gz"
+
+    # Try loading from gzipped file
+    if os.path.exists(gz_path):
+        print("Loading chunks from compressed JSON...")
+        with gzip.open(gz_path, "rt", encoding="utf-8") as f:
             chunks = json.load(f)
     else:
         print("Reading markdown files...")
         chunks = load_markdown_files()
-        with open(CHUNKS_PATH, "w", encoding="utf-8") as f:
-            json.dump(chunks, f, indent=2)
+        os.makedirs(os.path.dirname(gz_path), exist_ok=True)
+        with gzip.open(gz_path, "wt", encoding="utf-8") as f:
+            json.dump(chunks, f)
 
     # Embed
     collection = client.create_collection(name="hr_docs", embedding_function=embedding_func)
@@ -81,3 +83,4 @@ def initialize_chroma():
 
     collection.add(documents=documents, ids=ids, metadatas=metadatas)
     print(f"Finished embedding {len(chunks)} chunks.")
+
