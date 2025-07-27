@@ -41,8 +41,7 @@ def chat(req: ChatRequest):
     print("Injected Context:", [c[:50] + "..." for c in retrieved_chunks])
     print("RAG Source:", source)
 
-    # Limit to 1 chunk
-    context_text = next(iter(retrieved_chunks), "")
+    context_text = "\n\n".join(retrieved_chunks)
 
     # LLM messages
     messages = build_prompt(history, prompt, context=context_text)

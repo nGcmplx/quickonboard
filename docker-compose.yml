@@ -28,6 +28,16 @@ services:
     volumes:
       - ollama-data:/root/.ollama
 
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: quickonboard-streamlit
+    ports:
+      - "8501:8501"
+    depends_on:
+      - api-service
+
   api-service:
     build: .
     container_name: quickonboard-api

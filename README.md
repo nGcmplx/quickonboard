@@ -31,9 +31,10 @@
 
 ### 5. Semantic Vector Retrieval
 
-- Chunks markdown or HR documents using **ChromaDB** + Ollama Embeddings.
-- Returns the top relevant context chunk to the LLM.
-- Helpful for ambiguous queries or edge cases.
+  - Chunks markdown or HR documents using **ChromaDB** + Ollama Embeddings.
+  - Returns the top relevant context chunk to the LLM.
+  - Helpful for ambiguous queries or edge cases.
+  - frontend (Streamlit chat interface)
 
 ### 6. Fully Containerized Deployment
 
@@ -45,6 +46,7 @@
   - **db** (PostgreSQL)
   - **redis** (session memory)
   - **chroma** (vector search)
+  - **streamlit-frontend** (Streamlit chat interface)
 
 ---
 
@@ -52,6 +54,7 @@
 
 | Layer        | Technology              |
 | ------------ | ----------------------- |
+| Frontend UI  | Streamlit                 |
 | Backend API  | FastAPI                 |
 | Local LLM    | Ollama (`phi:2.7b`)     |
 | Vector DB    | ChromaDB                |
@@ -127,6 +130,7 @@ This spins up:
 * `redis`: for session memory
 * `postgres`: for logging
 * `chroma`: for vector search (HR docs)
+* `frontend`: for frontend UI
 
 ### 3. Test the API
 

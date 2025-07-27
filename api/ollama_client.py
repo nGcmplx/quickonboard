@@ -7,19 +7,30 @@ OLLAMA_PORT = os.getenv("OLLAMA_PORT", "11434")
 
 client = Client(host=f"http://{OLLAMA_HOST}:{OLLAMA_PORT}")
 
-def ask_ollama(messages: List[Dict[str, str]]) -> str:
+def ask_ollama(
+        messages: List[Dict[str, str]],
+        model: str = "phi:2.7b",
+        options: Dict = {
+            "temperature": 0.2,
+            "num_predict": 256,
+            "top_k": 30,
+            "top_p": 0.9
+        }
+) -> str:
     response = client.chat(
-        model="phi:2.7b",
+        model=model,
         messages=messages,
-        options={"num_predict": 64, "temperature": 0.7}
+        options=options
     )
-    return response["message"]["content"]
+
+    content = response["message"]["content"]
+    return content
 
 
-def warm_up_ollama():
+def warm_up_ollama(model: str = "phi:2.7b"):
     try:
         print("Warming up Ollama model...")
-        _ = client.generate(model="phi:2.7b", prompt="hello")
+        _ = client.generate(model=model, prompt="hello")
         print("Ollama model is ready.")
     except Exception as e:
         print("Failed to warm up Ollama:", str(e))
